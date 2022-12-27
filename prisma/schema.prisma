@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions", "clientExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  extensions = [postgis]
+}
+
+model ArticleCategory {
+  id                     Int                                   @id @default(autoincrement())
+  name                   String
+
+  @@map("article_category")
+}
+
+model ArticleComment{
+  id                     Int                                   @id @default(autoincrement())
+  created_at             DateTime
+  text                   String
+  pinned                 Boolean
+  deactivated            Boolean
+  // article_id          Int noch mappen
+}
+
+model Image {
+  id                     Int @id@default(autoincrement())
+  path                   String
+  deactivated            Boolean
+  //user_id              int noch mappen
+}
+
+model Plot {
+  id                     Int                                   @id @default(autoincrement())
+  polygon                Unsupported("geometry(polygon, 4326)")
+  name                   String
+  owner                  String
+  care_state             String
+  care                   Boolean
+  cost_cut_sqm           Float
+  cost_mulch_sqm         Float
+  selected_mulchen       Int
+  selected_maehen        Int
+  description_plot       String
+  deactivated            Boolean
+}
+
+model Species {
+  id                     Int                                   @id @default(autoincrement())
+  name                   String
+  //treeType_id          int noch mappen
+}
+
+model SponsorShip {
+  id                     Int @id@default(autoincrement())
+  date_from              DateTime //nochmal überprüfen in Vorlage steht DATEONLY
+  date_to                DateTime //nochmal überprüfen in Vorlage steht DATEONLY
+  activity               String
+  application            Boolean
+  deactivated            Boolean
+  //tree_id              Int noch mappen
+  //user_id              Int noch mappen
+}
+
+model StaticText{
+  id                     Int                                   @id @default(autoincrement())
+  text                   String //in Vorlage steht als type sequelize.TEXT
+}
+
