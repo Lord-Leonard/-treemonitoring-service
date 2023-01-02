@@ -2,73 +2,232 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions", "clientExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
   extensions = [postgis]
 }
 
 model ArticleCategory {
-  id                     Int                                   @id @default(autoincrement())
-  name                   String
+  id   Int    @id @default(autoincrement())
+  name String
 
   @@map("article_category")
 }
 
-model ArticleComment{
-  id                     Int                                   @id @default(autoincrement())
-  created_at             DateTime
-  text                   String
-  pinned                 Boolean
-  deactivated            Boolean
-  // article_id          Int noch mappen
+model ArticleComment {
+  id          Int                @id @default(autoincrement())
+  created_at  DateTime
+  text        String
+  pinned      Boolean
+  deactivated Boolean
+  article     NoticeboardArticle @relation(fields: [article_id], references: [id])
+  article_id  Int
+
+  @@map("article_comment")
 }
 
 model Image {
-  id                     Int @id@default(autoincrement())
-  path                   String
-  deactivated            Boolean
-  //user_id              int noch mappen
+  id          Int         @id @default(autoincrement())
+  path        String
+  deactivated Boolean
+  user        User        @relation(fields: [user_id], references: [id])
+  user_id     Int         @unique
+  tree_image  TreeImage[]
+
+  @@map("image")
+}
+
+model NoticeboardArticle {
+  id                  Int              @id @default(autoincrement())
+  created_at          DateTime //in original type: Sequelize.DATE,
+  user_id             Int //muss noch referenziert werden
+  tree_id             Int //muss noch referenziert werden
+  article_category_id Int //muss noch referenziert werden
+  plot_id             Int //muss noch referenziert werden
+  //picture_id int ist noch auskommentiert im original
+  heading             String
+  text                String
+  deactivated         Boolean
+  pinned              Boolean
+  Tree                Tree[]
+  article_id          ArticleComment[]
+
+  @@map("noticeboard_article")
 }
 
 model Plot {
-  id                     Int                                   @id @default(autoincrement())
-  polygon                Unsupported("geometry(polygon, 4326)")
-  name                   String
-  owner                  String
-  care_state             String
-  care                   Boolean
-  cost_cut_sqm           Float
-  cost_mulch_sqm         Float
-  selected_mulchen       Int
-  selected_maehen        Int
-  description_plot       String
-  deactivated            Boolean
+  id               Int                                    @id @default(autoincrement())
+  polygon          Unsupported("geometry(polygon, 4326)")
+  name             String
+  owner            String
+  care_state       String
+  care             Boolean
+  cost_cut_sqm     Float
+  cost_mulch_sqm   Float
+  selected_mulchen Int
+  selected_maehen  Int
+  description_plot String
+  deactivated      Boolean
+  trees            Tree[]
+
+  @@map("plot")
 }
 
 model Species {
-  id                     Int                                   @id @default(autoincrement())
-  name                   String
-  //treeType_id          int noch mappen
+  id          Int      @id @default(autoincrement())
+  name        String
+  tree        Tree?
+  treeType    TreeType @relation(fields: [treeType_id], references: [id])
+  treeType_id Int      @unique
+
+  @@map("species")
 }
 
 model SponsorShip {
-  id                     Int @id@default(autoincrement())
-  date_from              DateTime //nochmal überprüfen in Vorlage steht DATEONLY
-  date_to                DateTime //nochmal überprüfen in Vorlage steht DATEONLY
-  activity               String
-  application            Boolean
-  deactivated            Boolean
+  id          Int      @id @default(autoincrement())
+  date_from   DateTime //nochmal überprüfen in Vorlage steht DATEONLY
+  date_to     DateTime //nochmal überprüfen in Vorlage steht DATEONLY
+  activity    String
+  application Boolean
+  deactivated Boolean
   //tree_id              Int noch mappen
   //user_id              Int noch mappen
+
+  @@map("sponsorship")
 }
 
-model StaticText{
-  id                     Int                                   @id @default(autoincrement())
-  text                   String //in Vorlage steht als type sequelize.TEXT
+model StaticText {
+  id   String @id //mit String in Vorlage
+  text String //in Vorlage steht als type sequelize.TEXT
+
+  //no @@map
 }
 
+model TreeAudit {
+  id           Int      @id @default(autoincrement())
+  tree         Tree     @relation(fields: [tree_id], references: [id])
+  tree_id      Int      @unique
+  dml_type     String
+  dml_timestap DateTime //in Vorlage Sequelizer.Date
+  dml_user     String
+  old_row_data Json //in Vorlage Sequelize.JSONB
+  new_row_data Json //in Vorlage Sequelize.JSONB
+
+  @@map("treeAuditlog")
+}
+
+model TreeImage {
+  id          Int     @id @default(autoincrement())
+  deactivated Boolean
+  tree        Tree    @relation(fields: [tree_id], references: [id])
+  tree_id     Int     @unique
+  image       Image   @relation(fields: [image_id], references: [id])
+  image_id    Int     @unique
+
+  @@map("tree_image")
+}
+
+model Tree {
+  id                                       Int                                   @id @default(autoincrement())
+  point                                    Unsupported("geometry(Point, 4326)")?
+  height                                   Float
+  trunkCircumference                       Float
+  careState                                String
+  strikingForLandscape                     Boolean
+  yearOfPlanting                           DateTime? //in original Double
+  cropSize                                 Float
+  juiceAmount                              Float
+  sponsorSearched                          Boolean
+  deactivated                              Boolean //in Benchmark active
+  plot                                     Plot                                  @relation(fields: [plot_id], references: [id])
+  plot_id                                  Int
+  species                                  Species                               @relation(fields: [species_id], references: [id])
+  species_id                               Int                                   @unique
+  vitality                                 Vitality                              @relation(fields: [vitality_id], references: [id])
+  vitality_id                              Int                                   @unique
+  owner                                    User                                  @relation(fields: [owner_id], references: [id])
+  owner_id                                 Int                                   @unique
+  sposorship_search_noticeboard_article    NoticeboardArticle                    @relation(fields: [sposorship_search_noticeboard_article_id], references: [id])
+  sposorship_search_noticeboard_article_id Int
+  external_id                              Int
+  tree_image                               TreeImage[]
+  tree_audit                               TreeAudit[]
+
+  //hooks noch implementieren (vermutlich mit middelware)
+
+  @@map("tree")
+}
+
+model TreeType {
+  id      Int      @id @default(autoincrement())
+  name    String
+  species Species?
+
+  @@map("treeType")
+}
+
+model UserActivation {
+  id      Int      @id @default(autoincrement())
+  expires DateTime
+  user    User     @relation(fields: [user_id], references: [id])
+  user_id Int      @unique
+
+  @@map("user_activation")
+}
+
+model UserAudit {
+  id            Int      @id @default(autoincrement())
+  user          User     @relation(fields: [user_id], references: [id])
+  user_id       Int      @unique
+  dml_type      String
+  dml_timestamp DateTime
+  old_row_data  Json
+  new_row_data  Json
+
+  @@map("userAuditlog")
+}
+
+model User {
+  id                              Int                @id @default(autoincrement())
+  username                        String
+  firstname                       String
+  lastname                        String
+  email                           String
+  password_hash                   String
+  status                          String
+  admin                           Boolean
+  email_notify_on_change          Boolean
+  email_notify_on_favorite_change Boolean
+  deactivated                     Boolean
+  tree                            Tree?
+  user_actvation                  UserActivation?
+  user_password_reset             UserPasswordReset?
+  images                          Image[]
+  user_audit                      UserAudit[]
+
+  //hooks noch implementieren (vermutlich mit middelware)
+
+  @@map("user")
+}
+
+model UserPasswordReset {
+  id      Int      @id @default(autoincrement())
+  expires DateTime
+  user    User     @relation(fields: [user_id], references: [id])
+  user_id Int      @unique
+
+  @@map("user_password_reset")
+}
+
+model Vitality {
+  id   Int    @id @default(autoincrement())
+  name String
+  tree Tree?
+
+  @@map("vitality")
+}
