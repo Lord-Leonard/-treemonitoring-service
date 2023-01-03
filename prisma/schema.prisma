@@ -115,8 +115,8 @@ model TreeAudit {
   dml_type     String
   dml_timestap DateTime //in Vorlage Sequelizer.Date
   dml_user     String
-  old_row_data Json //in Vorlage Sequelize.JSONB
-  new_row_data Json //in Vorlage Sequelize.JSONB
+  old_row_data Json     //saved to db as jsonb
+  new_row_data Json     //saved to db as jsonb
 
   @@map("treeAuditlog")
 }
@@ -186,8 +186,8 @@ model UserAudit {
   user_id       Int      @unique
   dml_type      String
   dml_timestamp DateTime
-  old_row_data  Json
-  new_row_data  Json
+  old_row_data  Json     // saved to db as jsonb
+  new_row_data  Json     // saved to db as jsonb
 
   @@map("userAuditlog")
 }
@@ -199,10 +199,10 @@ model User {
   lastname                        String
   email                           String
   password_hash                   String
-  status                          String
+  status                          String?
   admin                           Boolean
-  email_notify_on_change          Boolean
-  email_notify_on_favorite_change Boolean
+  email_notify_on_change          Boolean?
+  email_notify_on_favorite_change Boolean?
   deactivated                     Boolean
   tree                            Tree?
   user_actvation                  UserActivation?
