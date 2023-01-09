@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider   = "postgresql"
-  url        = "postgresql://root:root@localhost:5432/mydb?schema=public" //env("DATABASE_URL")
+  url        = "postgresql://root:root@localhost:5432/postgres?schema=public" //env("DATABASE_URL")
   extensions = [postgis]
 }
 

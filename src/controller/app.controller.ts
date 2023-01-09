@@ -1,8 +1,7 @@
-import { Controller, Get, Post, UseGuards, Request } from "@nestjs/common";
+import { Controller, Get, Request, UseGuards } from "@nestjs/common";
 import { PingService } from "src/ping/ping.service";
-import { AuthGuard} from '@nestjs/passport'
-import { LocalAuthGuard } from "src/auth/local-auth.guards";
 import { AuthService } from "src/auth/auth.service";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 
 @Controller()
 export class AppController {
@@ -15,9 +14,9 @@ export class AppController {
     return this.pingservice.ping();
   }
 
-  @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  async login(@Request() req){
-    return this.authService.login(req.user);
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user;
   }
 }
