@@ -1,14 +1,23 @@
-import { Controller, Get } from "@nestjs/common";
-import { AppService } from "../service/app.service";
+import { Controller, Get, Post, UseGuards, Request } from "@nestjs/common";
+import { PingService } from "src/ping/ping.service";
+import { AuthGuard} from '@nestjs/passport'
+import { LocalAuthGuard } from "src/auth/local-auth.guards";
+import { AuthService } from "src/auth/auth.service";
 
-@Controller('ping')
+@Controller()
 export class AppController {
   constructor(
-    private readonly appService: AppService,
+    private readonly pingservice: PingService, private authService: AuthService
   ) {}
 
-  @Get()
+  @Get('ping')
   ping(): string {
-    return this.appService.ping();
+    return this.pingservice.ping();
+  }
+
+  @UseGuards(LocalAuthGuard)
+  @Post('auth/login')
+  async login(@Request() req){
+    return this.authService.login(req.user);
   }
 }

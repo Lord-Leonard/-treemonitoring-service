@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider   = "postgresql"
-  url        = env("DATABASE_URL")
+  url        = "postgresql://root:root@localhost:5432/mydb?schema=public" //env("DATABASE_URL")
   extensions = [postgis]
 }
 
@@ -115,8 +115,8 @@ model TreeAudit {
   dml_type     String
   dml_timestap DateTime //in Vorlage Sequelizer.Date
   dml_user     String
-  old_row_data Json     //saved to db as jsonb
-  new_row_data Json     //saved to db as jsonb
+  old_row_data Json //saved to db as jsonb
+  new_row_data Json //saved to db as jsonb
 
   @@map("treeAuditlog")
 }
@@ -186,8 +186,8 @@ model UserAudit {
   user_id       Int      @unique
   dml_type      String
   dml_timestamp DateTime
-  old_row_data  Json     // saved to db as jsonb
-  new_row_data  Json     // saved to db as jsonb
+  old_row_data  Json // saved to db as jsonb
+  new_row_data  Json // saved to db as jsonb
 
   @@map("userAuditlog")
 }
