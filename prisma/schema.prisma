@@ -194,7 +194,7 @@ model UserAudit {
 
 model User {
   id                              Int                @id @default(autoincrement())
-  username                        String
+  username                        String             @unique
   firstname                       String
   lastname                        String
   email                           String
