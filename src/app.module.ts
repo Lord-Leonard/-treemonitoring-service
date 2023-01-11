@@ -9,6 +9,7 @@ import { PingModule } from "./ping/ping.module";
 import { PingService } from "./ping/ping.service";
 import { AuthService } from "./auth/auth.service";
 import { JwtService } from "@nestjs/jwt";
+import { AdminController } from './admin/admin.controller';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { JwtService } from "@nestjs/jwt";
     PingModule
   ],
   controllers: [
-    AppController
+    AppController,
+    AdminController
   ],
   providers: [
     AppService,
