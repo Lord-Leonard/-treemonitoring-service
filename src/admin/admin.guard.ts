@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { JwtService } from "@nestjs/jwt";
 import { User } from "@prisma/client";
 import { Observable } from "rxjs";
-import { jwtConstants } from "../auth/constants";
+import { jwtConstants } from "src/auth/auth.constants";
 
 @Injectable()
 export class AdminGuard implements CanActivate {

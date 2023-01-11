@@ -1,20 +1,20 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "./controller/app.controller";
-import { AppService } from "./service/app.service";
-import { Service } from "./user/service";
-import { PrismaService } from "./service/prisma.service";
-import { AuthModule } from "./auth/auth.module";
-import { UsersModule } from "./users/users.module";
-import { PingModule } from "./ping/ping.module";
-import { PingService } from "./ping/ping.service";
-import { AuthService } from "./auth/auth.service";
 import { JwtService } from "@nestjs/jwt";
 import { AdminController } from './admin/admin.controller';
+import { AuthModule } from "./auth/auth.module";
+import { AuthService } from "./auth/auth.service";
+import { AppController } from "./controller/app.controller";
+import { PingModule } from "./ping/ping.module";
+import { PingService } from "./ping/ping.service";
+import { PrismaService } from "./prisma/prisma.service";
+import { UserModule } from "./user/user.module";
+import { UserService } from "./user/user.service";
+import { PasswordService } from './password/password.service';
 
 @Module({
   imports: [
     AuthModule,
-    UsersModule,
+    UserModule,
     PingModule
   ],
   controllers: [
@@ -22,12 +22,12 @@ import { AdminController } from './admin/admin.controller';
     AdminController
   ],
   providers: [
-    AppService,
-    Service,
+    UserService,
     PrismaService,
     PingService,
     AuthService,
-    JwtService
+    JwtService,
+    PasswordService
   ],
 })
-export class AppModule {}
+export class AppModule { }
