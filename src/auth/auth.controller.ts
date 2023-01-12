@@ -1,6 +1,5 @@
-import { Controller, Post, Req, UseGuards } from "@nestjs/common";
-import type { User as UserType } from "@prisma/client";
-import { Request } from "express";
+import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import type { Prisma, User as UserType } from "@prisma/client";
 import { User } from "src/user/user.decorator";
 
 import { AuthService } from "./auth.service";
@@ -14,13 +13,12 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Req() req: Request, @User() user: UserType) {
-    console.log(req)
+  async login(@User() user: UserType) {
     return this.authService.login(user);
   }
 
   @Post('register')
-  async register(@Req() req: Request) {
-    return this.authService.register(req.body);
+  async register(@Body() user: Prisma.UserCreateInput) {
+    return this.authService.register(user);
   }
 }
