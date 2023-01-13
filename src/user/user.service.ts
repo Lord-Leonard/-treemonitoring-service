@@ -7,6 +7,17 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class UserService {
   constructor(private prismaService: PrismaService) { }
 
+  activateUser(id: number) {
+    this.updateUser({
+      where: {
+        id
+      },
+      data: {
+        deactivated: false
+      }
+    })
+  }
+
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<User | null> {
@@ -51,28 +62,44 @@ export class UserService {
     });
   }
 
+  async updateUserById(id: number, data: Prisma.UserUpdateInput): Promise<User> {
+    return this.prismaService.user.update({
+      where: {
+        id
+      },
+      data
+    })
+  }
+
   async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
     return this.prismaService.user.delete({
       where,
     });
   }
 
+  async deleteUserById(id: number): Promise<User> {
+    return await this.prismaService.user.delete({
+      where: {
+        id
+      }
+    });
+  }
+
   async usernameExists(username: string): Promise<Boolean> {
-    const count = await this.prismaService.user.count({
+    const user = await this.prismaService.user.findFirst({
       where: {
         username
       }
     });
-
-    return Boolean(count)
+    return Boolean(user)
   }
 
   async emailExists(email: string): Promise<Boolean> {
-    const count = await this.prismaService.user.count({
+    const user = await this.prismaService.user.findFirst({
       where: {
         email
       }
     });
-    return Boolean(count)
+    return Boolean(user)
   }
 }

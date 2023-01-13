@@ -1,6 +1,8 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
+import { ActivationController } from './activation/activation.controller';
+import { ActivationService } from './activation/activation.service';
 import { AdminController } from './admin/admin.controller';
 import { AuthModule } from "./auth/auth.module";
 import { AuthService } from "./auth/auth.service";
@@ -10,7 +12,6 @@ import { PasswordService } from './password/password.service';
 import { PingModule } from "./ping/ping.module";
 import { PingService } from "./ping/ping.service";
 import { PrismaService } from "./prisma/prisma.service";
-import { UserActivationService } from './user-activation/user-activation.service';
 import { UserModule } from "./user/user.module";
 import { UserService } from "./user/user.service";
 
@@ -23,7 +24,8 @@ import { UserService } from "./user/user.service";
   ],
   controllers: [
     AppController,
-    AdminController
+    AdminController,
+    ActivationController
   ],
   providers: [
     UserService,
@@ -32,7 +34,7 @@ import { UserService } from "./user/user.service";
     AuthService,
     JwtService,
     PasswordService,
-    UserActivationService,
+    ActivationService,
     LinkService,
   ],
 })

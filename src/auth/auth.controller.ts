@@ -1,18 +1,21 @@
 import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { ApiResponse } from "@nestjs/swagger";
-import { UserActivationService } from "src/user-activation/user-activation.service";
+import { ActivationService } from "src/activation/activation.service";
 import { CreateUserDto } from "src/user/dto/create-user.dto";
 import { LoginUserDto } from "src/user/dto/login-user.dto";
 import { User } from "src/user/user.decorator";
+import { UserService } from "src/user/user.service";
 
 import { AuthService } from "./auth.service";
+import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { LocalAuthGuard } from "./guards/local-auth.guards";
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
-    private userActivationService: UserActivationService
+    private userActivationService: ActivationService,
+    private userService: UserService
   ) { }
 
   @UseGuards(LocalAuthGuard)
@@ -27,6 +30,20 @@ export class AuthController {
   async register(@Body() userData: CreateUserDto) {
     const user = await this.authService.register(userData);
 
-    return await this.userActivationService.createUserActivation(user);
+    return await this.userActivationService.createUserActivation(user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('signout')
+  async signout(@User() user) {
+    //Find and deaktivate all Trees from User
+
+    //Find all Sponsorships and set date_to to current Date.
+
+    //Find and deactivate all NoticeboardArticles from User
+
+    this.userService.deleteUserById(user.id)
+
+    return { message: 'signout successfully'}
   }
 }
