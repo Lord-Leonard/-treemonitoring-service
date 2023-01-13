@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class PasswordService {
 
-  async checkPasswordToPolicy(password) {
+  async validatePassword(password): Promise<Boolean> {
     //code from https://stackoverflow.com/a/17152963 by Devin Lynch
     var anUpperCase = /[A-Z]/;
     var aLowerCase = /[a-z]/;
@@ -11,7 +11,7 @@ export class PasswordService {
     var aSpecial = /[!|@|#|$|%|^|&|*|(|)|-|_]/;
 
     if (password.length < 8) {
-      throw 
+      throw new HttpException('Password too short', HttpStatus.CONFLICT)
     }
 
     var numUpper = 0;
@@ -25,11 +25,21 @@ export class PasswordService {
       else if (aSpecial.test(password[i])) numSpecials++;
     }
 
-    if (numUpper < 1 || numLower < 1 || numNums < 1 || numSpecials < 1) {
-      obj.result = false;
-      obj.error = 'wrong format';
-      return obj;
+    if (numUpper < 1) {
+      throw new HttpException('Password must contain at least one uppercase Letter', HttpStatus.CONFLICT);
     }
-    return obj;
+
+    if (numLower < 1) {
+      throw new HttpException('Password must contain at least one lowercase Letter', HttpStatus.CONFLICT);
+    }
+
+    if (numNums < 1) {
+      throw new HttpException('Password must contain at least one number', HttpStatus.CONFLICT)
+    }
+
+    if (numSpecials < 1) {
+      throw new HttpException('Password must contain at least one special character (!,@,#,$,%,^,&,*,(,),-,_', HttpStatus.CONFLICT);
+    }
+    return true
   }
 }

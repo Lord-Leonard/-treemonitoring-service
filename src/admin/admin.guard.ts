@@ -7,9 +7,9 @@ import { jwtConstants } from "src/auth/auth.constants";
 @Injectable()
 export class AdminGuard implements CanActivate {
   constructor(private jwtService: JwtService) { }
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+
+  canActivate(context: ExecutionContext):
+    boolean | Promise<boolean> | Observable<boolean> {
     const authHeader = context.switchToHttp().getRequest().rawHeaders;
     let token
     for (const element of authHeader) {

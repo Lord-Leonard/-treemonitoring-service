@@ -5,12 +5,12 @@ import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prismaService: PrismaService) { }
 
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<User | null> {
-    return this.prisma.user.findUnique({
+    return this.prismaService.user.findUnique({
       where: userWhereUniqueInput,
     });
   }
@@ -23,7 +23,7 @@ export class UserService {
     orderBy?: Prisma.UserOrderByWithRelationInput;
   }): Promise<User[]> {
     const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.user.findMany({
+    return this.prismaService.user.findMany({
       skip,
       take,
       cursor,
@@ -35,7 +35,7 @@ export class UserService {
   async createUser(data: Prisma.UserCreateInput): Promise<User> {
     data.password_hash = await hash(data.password_hash, 10)
 
-    return this.prisma.user.create({
+    return this.prismaService.user.create({
       data,
     });
   }
@@ -45,15 +45,34 @@ export class UserService {
     data: Prisma.UserUpdateInput;
   }): Promise<User> {
     const { where, data } = params;
-    return this.prisma.user.update({
+    return this.prismaService.user.update({
       data,
       where,
     });
   }
 
   async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
-    return this.prisma.user.delete({
+    return this.prismaService.user.delete({
       where,
     });
+  }
+
+  async usernameExists(username: string): Promise<Boolean> {
+    const count = await this.prismaService.user.count({
+      where: {
+        username
+      }
+    });
+
+    return Boolean(count)
+  }
+
+  async emailExists(email: string): Promise<Boolean> {
+    const count = await this.prismaService.user.count({
+      where: {
+        email
+      }
+    });
+    return Boolean(count)
   }
 }

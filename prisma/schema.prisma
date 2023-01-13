@@ -197,13 +197,13 @@ model User {
   username                        String             @unique
   firstname                       String
   lastname                        String
-  email                           String
+  email                           String             @unique
   password_hash                   String
   status                          String?
-  admin                           Boolean
+  admin                           Boolean            @default(false)
   email_notify_on_change          Boolean?
   email_notify_on_favorite_change Boolean?
-  deactivated                     Boolean
+  deactivated                     Boolean            @default(true)
   tree                            Tree?
   user_actvation                  UserActivation?
   user_password_reset             UserPasswordReset?

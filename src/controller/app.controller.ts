@@ -9,9 +9,5 @@ export class AppController {
     private readonly pingservice: PingService, private authService: AuthService
   ) { }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
-  }
+
 }
