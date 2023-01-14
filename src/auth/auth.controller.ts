@@ -36,14 +36,12 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('signout')
   async signout(@User() user) {
-    //Find and deaktivate all Trees from User
-
-    //Find all Sponsorships and set date_to to current Date.
-
-    //Find and deactivate all NoticeboardArticles from User
+    //OOS: Find and deaktivate all Trees from User
+    //OOS: Find all Sponsorships and set date_to to current Date.
+    //OOS: Find and deactivate all NoticeboardArticles from User
 
     this.userService.deleteUserById(user.id)
 
-    return { message: 'signout successfully'}
+    return { message: 'signout successfully' }
   }
 }

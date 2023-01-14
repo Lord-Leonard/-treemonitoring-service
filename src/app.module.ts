@@ -14,6 +14,9 @@ import { PingService } from "./ping/ping.service";
 import { PrismaService } from "./prisma/prisma.service";
 import { UserModule } from "./user/user.module";
 import { UserService } from "./user/user.service";
+import { PlotsController } from './plots/plots.controller';
+import { PlotsService } from './plots/plots.service';
+import { GeometryService } from './geometry/geometry.service';
 
 @Module({
   imports: [
@@ -25,7 +28,8 @@ import { UserService } from "./user/user.service";
   controllers: [
     AppController,
     AdminController,
-    ActivationController
+    ActivationController,
+    PlotsController
   ],
   providers: [
     UserService,
@@ -36,6 +40,8 @@ import { UserService } from "./user/user.service";
     PasswordService,
     ActivationService,
     LinkService,
+    PlotsService,
+    GeometryService,
   ],
 })
 export class AppModule { }

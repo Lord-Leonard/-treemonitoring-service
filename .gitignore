@@ -41,3 +41,6 @@ lerna-debug.log*
 #Environment
 /.env
 /pnpm-lock.yaml
+
+# prisma
+prisma/migrations/*

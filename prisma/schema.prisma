@@ -62,7 +62,7 @@ model NoticeboardArticle {
 
 model Plot {
   id               Int                                    @id @default(autoincrement())
-  polygon          Unsupported("geometry(polygon, 4326)")
+  polygon          Unsupported("geometry(polygon, 4326)") @unique
   name             String
   owner            String
   care_state       String
@@ -72,8 +72,9 @@ model Plot {
   selected_mulchen Int
   selected_maehen  Int
   description_plot String
-  deactivated      Boolean
+  deactivated      Boolean                                @default(false)
   trees            Tree[]
+  createdAt        DateTime                               @default(now())
 
   @@map("plot")
 }
