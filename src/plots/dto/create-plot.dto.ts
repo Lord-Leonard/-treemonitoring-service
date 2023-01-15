@@ -2,7 +2,7 @@ import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { Polygon } from "geojson";
 import { IsPolygon } from "src/lib/validators/isPolygon";
 
-export class CreateUserDto {
+export class CreatePlotDto {
   @IsString()
   @IsNotEmpty()
   name: string
@@ -43,3 +43,4 @@ export class CreateUserDto {
   @IsNotEmpty()
   description_plot: number
 }
+

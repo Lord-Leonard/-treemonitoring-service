@@ -7,16 +7,16 @@ import { AdminController } from './admin/admin.controller';
 import { AuthModule } from "./auth/auth.module";
 import { AuthService } from "./auth/auth.service";
 import { AppController } from "./controller/app.controller";
+import { GeometryService } from './geometry/geometry.service';
 import { LinkService } from "./link/link.service";
 import { PasswordService } from './password/password.service';
 import { PingModule } from "./ping/ping.module";
 import { PingService } from "./ping/ping.service";
+import { PlotsController } from './plots/plots.controller';
+import { PlotsService } from './plots/plots.service';
 import { PrismaService } from "./prisma/prisma.service";
 import { UserModule } from "./user/user.module";
 import { UserService } from "./user/user.service";
-import { PlotsController } from './plots/plots.controller';
-import { PlotsService } from './plots/plots.service';
-import { GeometryService } from './geometry/geometry.service';
 
 @Module({
   imports: [

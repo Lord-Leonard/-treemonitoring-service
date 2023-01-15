@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-plot.dto';
+import { CreatePlotDto } from './dto/create-plot.dto';
 import { PlotsService } from './plots.service';
 
 @Controller('plots')
@@ -9,7 +9,7 @@ export class PlotsController {
   ) { }
 
   @Post()
-  async createPlot(@Body() plot: CreateUserDto) {
-    this.plotsServerice.createPlot(plot)
+  async createPlot(@Body() plot: CreatePlotDto) {
+    await this.plotsServerice.createPlot(plot)
   }
 }

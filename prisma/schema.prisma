@@ -62,7 +62,7 @@ model NoticeboardArticle {
 
 model Plot {
   id               Int                                    @id @default(autoincrement())
-  polygon          Unsupported("geometry(polygon, 4326)") @unique
+  polygon          Unsupported("geometry(Polygon, 4326)") @unique
   name             String
   owner            String
   care_state       String

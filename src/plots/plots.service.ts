@@ -1,7 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Plot } from '@prisma/client';
 import { GeometryService } from 'src/geometry/geometry.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserDto } from './dto/create-plot.dto';
+import { CreatePlotDto } from './dto/create-plot.dto';
 
 @Injectable()
 export class PlotsService {
@@ -10,7 +11,7 @@ export class PlotsService {
     private geometryService: GeometryService
   ) { }
 
-  async createPlot(plot: CreateUserDto) {
+  async createPlot(plot: CreatePlotDto) {
     // Should be outsourced to a class-validator decorator
     const polygonIntersectsPlotResult = await (await this.geometryService.polygonIntersectsPlot(plot.polygon))
 
@@ -46,11 +47,24 @@ export class PlotsService {
     )`
 
     // Unschön - eventuell überarbeiten 
-    return this.prisma.plot.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 1
-    })
+    return (await this.prisma.$queryRaw<Plot>`
+      SELECT
+        id,
+        polygon::Json,
+        name,
+        owner,
+        care_state,
+        care,
+        cost_cut_sqm,
+        cost_mulch_sqm,
+        selected_mulchen,
+        selected_maehen,
+        description_plot,
+        deactivated,
+        "createdAt"
+      FROM plot
+      ORDER BY "createdAt" DESC
+      LIMIT 1
+    `)[0]
   }
 }

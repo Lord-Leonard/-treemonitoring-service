@@ -68,7 +68,7 @@ export class UserService {
         id
       },
       data
-    })
+    });
   }
 
   async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
@@ -91,7 +91,7 @@ export class UserService {
         username
       }
     });
-    return Boolean(user)
+    return Boolean(user);
   }
 
   async emailExists(email: string): Promise<Boolean> {
@@ -100,6 +100,13 @@ export class UserService {
         email
       }
     });
-    return Boolean(user)
+    return Boolean(user);
+  }
+
+  async userIsAdmin(id: any): Promise<boolean> {
+    const user = await this.prismaService.user.findUnique({
+      where: id
+    });
+    return user.admin;
   }
 }
