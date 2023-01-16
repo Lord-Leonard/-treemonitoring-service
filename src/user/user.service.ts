@@ -105,7 +105,7 @@ export class UserService {
 
   async userIsAdmin(id: any): Promise<boolean> {
     const user = await this.prismaService.user.findUnique({
-      where: id
+      where: {id}
     });
     return user.admin;
   }

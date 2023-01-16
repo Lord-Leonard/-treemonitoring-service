@@ -3,10 +3,14 @@ import { JwtService } from "@nestjs/jwt";
 import { User } from "@prisma/client";
 import { Observable } from "rxjs";
 import { jwtConstants } from "src/auth/auth.constants";
+import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class AdminGuard implements CanActivate {
-  constructor(private jwtService: JwtService) { }
+  constructor(
+    private jwtService: JwtService,
+    private userService: UserService
+    ) { }
 
   canActivate(context: ExecutionContext):
     boolean | Promise<boolean> | Observable<boolean> {
@@ -28,8 +32,10 @@ export class AdminGuard implements CanActivate {
       throw e
     }
 
-    const payload: User = this.jwtService.decode(token) as User;
-    if (payload.admin) {
+    const payload: any = this.jwtService.decode(token) ;
+    const userIsAdmin = this.userService.userIsAdmin(payload.sub)
+    
+    if (userIsAdmin) {
       console.log('Admin section');
       return true;
     } else {
