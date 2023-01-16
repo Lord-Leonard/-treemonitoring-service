@@ -9,7 +9,7 @@ export class ActivationController {
 
   @Get('user/:id')
   async activateUser(@Param('id', ParseIntPipe) userActivationId) {
-    this.activationService.activateUser(userActivationId)
+    return this.activationService.activateUser(userActivationId)
 
   }
 

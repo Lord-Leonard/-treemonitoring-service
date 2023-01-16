@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
-import { compare, hashSync } from 'bcrypt';
+import { compare } from 'bcrypt';
 import { PasswordService } from 'src/password/password.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginUserDto } from 'src/user/dto/login-user.dto';
@@ -47,7 +47,7 @@ export class AuthService {
       firstname: user.firstname,
       lastname: user.lastname,
       email: user.email,
-      password_hash: hashSync(user.password, 10)
+      password_hash: user.password
     });
   };
 }

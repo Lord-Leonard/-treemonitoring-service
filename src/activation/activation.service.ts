@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UserActivation } from '@prisma/client';
+import { User, UserActivation } from '@prisma/client';
 import { LinkService } from 'src/link/link.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
@@ -48,7 +48,7 @@ export class ActivationService {
     // await MailFacade.send(to, subject, text);
   };
 
-  async activateUser(userActivationId) {
+  async activateUser(userActivationId): Promise<User> {
     const userActivation = await this.findUserActivation(userActivationId)
 
     if (!userActivation) {
@@ -59,7 +59,7 @@ export class ActivationService {
       throw new HttpException('userActivation Expired', HttpStatus.GONE)
     }
 
-    this.userService.activateUser(
+    return await this.userService.activateUser(
       userActivation.user_id
     );
   }

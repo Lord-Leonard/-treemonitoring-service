@@ -9,5 +9,4 @@ export class UserController {
   getProfile(@User() user) {
     return user;
   }
-
 }
