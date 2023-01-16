@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider   = "postgresql"
-  url        = "postgresql://root:root@localhost:5432/postgres?schema=public" //env("DATABASE_URL")
+  url        = "postgresql://root:root@localhost:5432/postgres?schema=public" //OOS: env("DATABASE_URL") noch ersetzen
   extensions = [postgis]
 }
 
@@ -44,12 +44,12 @@ model Image {
 
 model NoticeboardArticle {
   id                  Int              @id @default(autoincrement())
-  created_at          DateTime //in original type: Sequelize.DATE,
-  user_id             Int //muss noch referenziert werden
-  tree_id             Int //muss noch referenziert werden
-  article_category_id Int //muss noch referenziert werden
-  plot_id             Int //muss noch referenziert werden
-  //picture_id int ist noch auskommentiert im original
+  created_at          DateTime
+  user_id             Int //OOS: muss noch referenziert werden
+  tree_id             Int //OOS: muss noch referenziert werden
+  article_category_id Int //OOS: muss noch referenziert werden
+  plot_id             Int //OOS: muss noch referenziert werden
+  //OOS: picture_id Int ist noch auskommentiert im original
   heading             String
   text                String
   deactivated         Boolean
@@ -74,7 +74,7 @@ model Plot {
   description_plot String
   deactivated      Boolean                                @default(false)
   trees            Tree[]
-  createdAt        DateTime                               @default(now())
+  createdAt        DateTime                               @default(now()) //added to query latest plot
 
   @@map("plot")
 }
@@ -91,22 +91,20 @@ model Species {
 
 model SponsorShip {
   id          Int      @id @default(autoincrement())
-  date_from   DateTime //nochmal überprüfen in Vorlage steht DATEONLY
-  date_to     DateTime //nochmal überprüfen in Vorlage steht DATEONLY
+  date_from   DateTime  @db.Date
+  date_to     DateTime @db.Date
   activity    String
   application Boolean
   deactivated Boolean
-  //tree_id              Int noch mappen
-  //user_id              Int noch mappen
+  //tree_id              OOS: Int noch mappen
+  //user_id              OOS: Int noch mappen
 
   @@map("sponsorship")
 }
 
 model StaticText {
-  id   String @id //mit String in Vorlage
-  text String //in Vorlage steht als type sequelize.TEXT
-
-  //no @@map
+  id   String @id //OOS: mit String in Vorlage -> unkonventionell
+  text String @db.Text 
 }
 
 model TreeAudit {
@@ -114,7 +112,7 @@ model TreeAudit {
   tree         Tree     @relation(fields: [tree_id], references: [id])
   tree_id      Int      @unique
   dml_type     String
-  dml_timestap DateTime //in Vorlage Sequelizer.Date
+  dml_timestap DateTime
   dml_user     String
   old_row_data Json //saved to db as jsonb
   new_row_data Json //saved to db as jsonb
@@ -140,11 +138,11 @@ model Tree {
   trunkCircumference                       Float
   careState                                String
   strikingForLandscape                     Boolean
-  yearOfPlanting                           DateTime? //in original Double
+  yearOfPlanting                           DateTime? //OOS: in original Double
   cropSize                                 Float
   juiceAmount                              Float
   sponsorSearched                          Boolean
-  deactivated                              Boolean //in Benchmark active
+  deactivated                              Boolean 
   plot                                     Plot                                  @relation(fields: [plot_id], references: [id])
   plot_id                                  Int
   species                                  Species                               @relation(fields: [species_id], references: [id])
@@ -159,7 +157,7 @@ model Tree {
   tree_image                               TreeImage[]
   tree_audit                               TreeAudit[]
 
-  //hooks noch implementieren (vermutlich mit middelware)
+  //OOS: hooks noch implementieren (vermutlich mit middelware)
 
   @@map("tree")
 }
@@ -211,8 +209,6 @@ model User {
   images                          Image[]
   user_audit                      UserAudit[]
 
-  //hooks noch implementieren (vermutlich mit middelware)
-
   @@map("user")
 }
 
@@ -232,3 +228,5 @@ model Vitality {
 
   @@map("vitality")
 }
+
+//OOS: Hooks noch implementieren mittels Middleware
